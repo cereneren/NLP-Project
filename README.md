@@ -44,26 +44,26 @@ Run inference for Model A and Model B on the **same** test corpus. Outputs are s
 **PowerShell:**
 ```powershell
 python -m src.inference `
-    --model_a "MODEL_A_HF_ID" `
-    --model_b "MODEL_B_HF_ID" `
+    --model_a "Qwen/Qwen2.5-3B-Instruct" `
+    --model_b "amd/Instella-3B-Instruct" `
     --output_dir outputs `
-    --max_new_tokens 256
+    --max_new_tokens 128
 ```
 
 **bash / Linux / macOS:**
 ```bash
 python -m src.inference \
-    --model_a "MODEL_A_HF_ID" \
-    --model_b "MODEL_B_HF_ID" \
+    --model_a "Qwen/Qwen2.5-3B-Instruct" \
+    --model_b "amd/Instella-3B-Instruct" \
     --output_dir outputs \
-    --max_new_tokens 256
+    --max_new_tokens 128
 ```
 
 Generation settings (all documented in `src/inference.py → GENERATION_CONFIG`):
 
 | Setting | Value | Notes |
 |---|---|---|
-| `max_new_tokens` | 256 | Max tokens generated per answer |
+| `max_new_tokens` | 128 | Max tokens generated per answer |
 | `do_sample` | False | Greedy decoding — deterministic output |
 | `temperature` | N/A | Not applied when `do_sample=False` |
 | `device` | auto | GPU if available, otherwise CPU |
@@ -73,8 +73,8 @@ To run on a subset for quick testing (PowerShell):
 
 ```powershell
 python -m src.inference `
-    --model_a "MODEL_A_HF_ID" `
-    --model_b "MODEL_B_HF_ID" `
+    --model_a "Qwen/Qwen2.5-3B-Instruct" `
+    --model_b "amd/Instella-3B-Instruct" `
     --sample_size 50 `
     --load_in_4bit
 ```
@@ -83,8 +83,8 @@ python -m src.inference `
 After inference, compute ROUGE scores against reference answers. `--load_in_4bit` can be used if running on limited VRAM.
 
 ```powershell
-python -m src.evaluate --model_name "YOUR_SELECTED_MODEL_ID_1"
-python -m src.evaluate --model_name "YOUR_SELECTED_MODEL_ID_2"
+python -m src.evaluate --model_name "Qwen/Qwen2.5-3B-Instruct"
+python -m src.evaluate --model_name "amd/Instella-3B-Instruct"
 ```
 
 ### 3. Fine-Tuning
@@ -92,7 +92,7 @@ After selecting the best performing model from the baseline evaluation, train it
 
 ```powershell
 python -m src.train `
-    --model_name "YOUR_SELECTED_MODEL_ID" `
+    --model_name "amd/Instella-3B-Instruct" `
     --output_dir "models/fine_tuned" `
     --epochs 3 `
     --batch_size 4
@@ -103,7 +103,7 @@ Test the final adapted model over the exact same test dataset.
 
 ```powershell
 python -m src.evaluate `
-    --model_name "YOUR_SELECTED_MODEL_ID" `
+    --model_name "amd/Instella-3B-Instruct" `
     --adapter_path "models/fine_tuned/final_model" `
     --sample_size 1500
 ```
